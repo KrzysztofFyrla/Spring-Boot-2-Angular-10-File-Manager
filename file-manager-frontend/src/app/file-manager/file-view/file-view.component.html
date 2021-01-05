@@ -1,0 +1,54 @@
+<section>
+  <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+    <span>Select file</span>
+    <input #fileInput type="file" (change)="selectFiles($event)" style="display:none;"/>
+  </button>
+  <button class="my-view" mat-raised-button color="primary" type="button" routerLink=".."
+          matTooltip="Change view">
+    <mat-icon>view_list</mat-icon>
+  </button>
+</section>
+
+<div class="container" fxFlex fxLayout="row" fxLayoutAlign="space-between stretch">
+  <div class="content" fxFlex fxLayout="row">
+    <mat-grid-list cols="4" rowHeight="100px" fxFlex>
+      <mat-grid-tile *ngFor="let element of file" class=file-or-folder>
+        <span [matMenuTriggerFor]="rootMenu" [matMenuTriggerData]="{element: element}" #menuTrigger="matMenuTrigger"></span>
+        <div fxLayout="column" fxLayoutAlign="space-between center"
+             (click)="navigate(element)"
+             (contextmenu)="openMenu($event, menuTrigger)">
+          <mat-icon color="primary" class="file-or-folder-icon pointer my-size" *ngIf="element.fileType === 'text/plain'">insert_drive_file</mat-icon>
+          <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="element.fileType === 'image/jpeg'">insert_drive_file</mat-icon>
+          <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="element.fileType === 'application/pdf'">insert_drive_file</mat-icon>
+          <span>{{element.fileName | truncate}}</span>
+        </div>
+
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>
+
+<mat-menu #rootMenu="matMenu" [overlapTrigger]="false">
+  <ng-template matMenuContent let-element="element">
+    <button mat-menu-item>
+      <a class="link" href="{{ element.fileDownloadUri }}">
+        <mat-icon>cloud_download</mat-icon>
+        <span>Download</span>
+      </a>
+    </button>
+    <button mat-menu-item (click)="deleteFile(element.id)">
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #moveToMenu="matMenu">
+  <ng-template matMenuContent let-self="self">
+    <ng-container *ngFor="let element of file">
+      <button *ngIf="element.fileType && element.id !== self.id" mat-menu-item (click)="moveElement(self, element)">{{element.fileName}}</button>
+    </ng-container>
+  </ng-template>
+</mat-menu>
+
+

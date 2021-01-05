@@ -1,0 +1,54 @@
+<section>
+  <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+    <span>Select file</span>
+    <input #fileInput type="file" (change)="selectFiles($event)" style="display:none;"/>
+  </button>
+  <button class="my-view" mat-raised-button color="primary" type="button" routerLink="../view"
+          matTooltip="Change view">
+    <mat-icon>view_module</mat-icon>
+  </button>
+</section>
+
+<div class="mytable example-container mat-elevation-z8">
+  <mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name</mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Nazwa">
+        <mat-icon>insert_drive_file</mat-icon>
+        <a href="{{ element.fileDownloadUri }}">{{element.fileName}}</a>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="space">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element"></mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Type</mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Typ"> {{element.fileType}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="size">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Size</mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Rozmiar"> {{element.size}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button (click)="deleteFile(element.id)" class='btn btn-danger' mat-mini-fab
+                matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+</div>
+
+
